@@ -1,4 +1,5 @@
 import { EVENTS_DEFAULT } from '@holywater-tech/ads-builder/framework/components/EventsDispatcher';
+import Screen from '../Screen';
 
 export const EVENTS = {
     ...EVENTS_DEFAULT,
@@ -21,6 +22,22 @@ export const LAYERS_DEPTH = {
     ITEM: 30,
     MISTAKES: 33,
     HAND_TUTORIAL: 44,
+};
+
+export const POSITION = {
+    choices: Screen.phoneProportions ? [0, 380, 0, 480] : [0, 430, 0, 480],
+    mistakes: Screen.phoneProportions ? [0, 180, 0, 230] : [0, 180, 0, 280],
+    buttons: Screen.phoneProportions ? [0, 250, 0, 300] : [0, 250, 0, 350],
+    messageTitle: Screen.phoneProportions ? [0, -100, 0, -100] : [0, -100, 0, -30],
+    level: Screen.phoneProportions ? [0, 0, 0, 0] : [0, 0, 0, 0],
+};
+export const SCALE = {
+    choices: Screen.phoneProportions ? [0.8, 0.8, 0.8, 0.8] : [0.8, 0.8, 0.8, 0.8],
+    mistakes: Screen.phoneProportions ? [0, 180, 0, 230] : [0, 180, 0, 280],
+    buttons: Screen.phoneProportions ? [0, 250, 0, 300] : [0, 250, 0, 350],
+    title: Screen.phoneProportions ? [0.22, 0.22, 0.22, 0.22] : [0.22, 0.22, 0.22, 0.22],
+    messageTitle: Screen.phoneProportions ? [0, 350, 0, -100] : [0, 350, 0, -30],
+    level: Screen.phoneProportions ? [0, 0, 0, 0] : [0, 0, 0, 0],
 };
 
 export const POSITION4x4 = [

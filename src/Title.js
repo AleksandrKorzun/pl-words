@@ -1,4 +1,3 @@
-import { LAYERS_DEPTH } from './constants/Constants';
 // import { SHEETS } from './constants/assets';
 
 export default class Title extends Phaser.GameObjects.Container {
@@ -6,8 +5,8 @@ export default class Title extends Phaser.GameObjects.Container {
         super(scene, 0, 0);
         this.tweens = scene.tweens;
         this.addProperties(['pos', 'scale'])
-            .setCustomPosition(190, 80, 0, 100)
-            .setCustomScale(0.7, 0.7, 0.3, 0.3)
+            .setCustomPosition(0, 80, 0, 100)
+            .setCustomScale(0.3, 0.3, 0.3, 0.3)
             .setCustomAlign('Top')
             .setDepth(25)
             .setAlpha(0);

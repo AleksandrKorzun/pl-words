@@ -1,10 +1,11 @@
 // import Utils from '@holywater-tech/ads-builder/framework/Utils';
-import { EVENTS, LAYERS_DEPTH, SHEETS } from './constants/Constants';
+import Utils from '@holywater-tech/ads-builder/framework/Utils';
+import { EVENTS, LAYERS_DEPTH } from './constants/Constants';
 
 export default class Item extends Phaser.GameObjects.Container {
     constructor(scene, options) {
         super(scene, 0, 0);
-        const { item, isOnce, isOpenStore, scale } = options;
+        const { item, isOpenStore, scale } = options;
 
         this.tweens = scene.tweens;
         this.img = item;
@@ -94,7 +95,7 @@ export default class Item extends Phaser.GameObjects.Container {
 
     onClick() {
         // const tapAudio = this.tap ? this.tap : AUDIO.TAP;
-        // Utils.addAudio(this.scene, tapAudio, 0.5, false);
+        Utils.addAudio(this.scene, 'tap', 0.5, false);
         if (this.isOpenStore) {
             this.scene.emitter.emit(EVENTS.OPEN_STORE, this);
         } else {
@@ -103,7 +104,7 @@ export default class Item extends Phaser.GameObjects.Container {
         this.onBaseSelect();
     }
 
-    onItemsClick(obj) {
+    onItemsClick() {
         // if (obj === this) {
         //     return;
         // }

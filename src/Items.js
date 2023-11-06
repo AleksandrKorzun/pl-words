@@ -1,7 +1,7 @@
 import Scene from '@holywater-tech/ads-builder/framework/components/Scene';
 import Utils from '@holywater-tech/ads-builder/framework/Utils';
 import Item from './Item';
-import { EVENTS, LAYERS_DEPTH, POSITION4x4, SHEETS } from './constants/Constants';
+import { EVENTS, LAYERS_DEPTH, POSITION, POSITION4x4, SHEETS } from './constants/Constants';
 // import { AUDIO, SHEETS } from './constants/assets';
 
 export default class Items extends Phaser.GameObjects.Container {
@@ -25,11 +25,17 @@ export default class Items extends Phaser.GameObjects.Container {
         }
     }
 
+    removeInteractive() {
+        this.items.forEach((item) => {
+            item.base.disableInteractive();
+        });
+    }
+
     initAssets() {
         this.addProperties(['pos', 'scale'])
-            .setCustomPosition(0, -80, 0, -80)
+            .setCustomPosition(...POSITION.choices)
             .setCustomScale(0, 0, 0, 0)
-            .setCustomAlign('Center')
+            .setCustomAlign('Top')
             .setDepth(30);
         this.half = Math.floor(this.lengthItem / 2) * 0.5;
 
@@ -169,8 +175,8 @@ export default class Items extends Phaser.GameObjects.Container {
     show(options = {}) {
         this.tweens.add({
             targets: this,
-            lScaleX: 0.95,
-            lScaleY: 0.95,
+            lScaleX: 0.7,
+            lScaleY: 0.7,
             pScaleX: 0.8,
             pScaleY: 0.8,
             duration: 500,

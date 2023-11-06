@@ -1,4 +1,4 @@
-import { LAYERS_DEPTH } from './constants/Constants';
+import { LAYERS_DEPTH, POSITION } from './constants/Constants';
 
 export default class Mistakes extends Phaser.GameObjects.Container {
     constructor(scene) {
@@ -12,7 +12,7 @@ export default class Mistakes extends Phaser.GameObjects.Container {
 
     initAssets() {
         this.addProperties(['pos'])
-            .setCustomPosition(0, 180, 0, 180)
+            .setCustomPosition(...POSITION.mistakes)
             .setScale(1)
             .setCustomAlign('Center')
             .setDepth(LAYERS_DEPTH.ITEMS);
@@ -57,10 +57,10 @@ export default class Mistakes extends Phaser.GameObjects.Container {
                 duration: 500,
                 yoyo: true,
                 ease: 'Sine.in',
-                onComplete: () => {
-                    this.lives[this.countLives]?.destroy();
-                },
             });
+            setTimeout(() => {
+                this.lives[this.countLives]?.destroy();
+            }, 400);
         }
     }
 }

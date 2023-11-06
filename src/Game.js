@@ -1,8 +1,9 @@
 import ParentScene from '@holywater-tech/ads-builder/framework/components/Scene';
 import Background from '@holywater-tech/ads-builder/framework/components/ui/Background';
+import Utils from '@holywater-tech/ads-builder/framework/Utils';
 import Title from './Title';
 import Items from './Items';
-import { EVENTS, PAIR_WORDS, POSITION4x4, WORDS } from './constants/Constants';
+import { EVENTS, PAIR_WORDS, POSITION, POSITION4x4, SCALE, WORDS } from './constants/Constants';
 import Mistakes from './Mistakes';
 import Buttons from './Buttons';
 
@@ -10,6 +11,7 @@ export default class Game extends ParentScene {
     create() {
         this.addBackground();
         this.addTitle();
+        this.soundtrack = Utils.addAudio(this, 'soundtrack', 0.2, true);
         this.addItems({ items: WORDS, isOnce: true }, { delay: 200 });
         this.addMistakes();
         this.addButtons();
@@ -52,22 +54,23 @@ export default class Game extends ParentScene {
     addAnswerTitle() {
         this.title = new Title(this, 'title');
         this.correct_title = new Title(this, 'title2')
-            .addProperties(['pos'])
+            .addProperties(['pos', 'scale'])
+            .setCustomScale(...SCALE.title)
             .setCustomAlign('Bottom')
-            .setCustomPosition(0, 350, 0, -200);
+            .setCustomPosition(...POSITION.messageTitle);
         this.wrong_title = new Title(this, 'title3')
             .addProperties(['pos'])
             .setCustomAlign('Bottom')
-            .setCustomPosition(0, 350, 0, -200);
+            .setCustomPosition(...POSITION.messageTitle);
         this.submit_title = new Title(this, 'title4')
             .addProperties(['pos'])
             .setCustomAlign('Bottom')
-            .setCustomPosition(0, 350, 0, -200);
+            .setCustomPosition(...POSITION.messageTitle);
         this.star_title = new Title(this, 'star')
             .addProperties(['pos'])
             .setCustomAlign('Top')
             .setScale(0.065, 0.27)
-            .setCustomPosition(0, 350, 0, 300);
+            .setCustomPosition(0, 0, 0, 300);
         this.instrument_title = new Title(this, 'instrument')
             .addProperties(['pos'])
             .setCustomAlign('Top')
@@ -125,7 +128,8 @@ export default class Game extends ParentScene {
         }
         const category = this.checkAnswer();
         if (category) {
-            this[`${category}_title`].setCustomPosition(0, 350, 0, this.correct * 100 + 200);
+            Utils.addAudio(this, 'correct', 0.3, false);
+            this[`${category}_title`].setCustomPosition(0, this.correct * 100 + 170, 0, this.correct * 100 + 200);
             this.correct += 1;
             this.counter = 0;
             this.choice = [];
@@ -139,16 +143,25 @@ export default class Game extends ParentScene {
                     .forEach((el, idx) => el.setPosition(newPosition[idx].x, newPosition[idx].y));
             }, 1100);
             if (this.correct >= 4) {
+                this.soundtrack.stop();
                 setTimeout(() => {
+                    Utils.addAudio(this, 'win', 0.3, false);
                     this.onCompleted();
                     this.game.network.addClickToStore(this.bg);
                 }, 1200);
             }
         } else {
+            Utils.addAudio(this, 'wrong', 0.3, false);
             this.wrong_title.blink();
             this.items.wrongAnswerAnim();
             this.mistakes.removeLives();
             if (!this.mistakes.countLives) {
+                this.soundtrack.stop();
+                Utils.addAudio(this, 'loose', 0.3, false);
+                this.items.removeInteractive();
+                this.btn_submit.removeInteractive();
+                this.btn_shuffle.removeInteractive();
+                this.btn_deselect.removeInteractive();
                 setTimeout(() => {
                     this.onFailed();
                     this.game.network.addClickToStore(this.bg);
@@ -161,7 +174,7 @@ export default class Game extends ParentScene {
         this.failed = this.add
             .image(0, 0, 'failed')
             .addProperties(['pos'])
-            .setCustomPosition(0, 300, 0, 0)
+            .setCustomPosition(...POSITION.level)
             .setScale(0)
             .setCustomAlign('Center')
             .setDepth(100);
@@ -178,7 +191,7 @@ export default class Game extends ParentScene {
         this.failed = this.add
             .image(0, 0, 'completed')
             .addProperties(['pos'])
-            .setCustomPosition(0, 300, 0, 0)
+            .setCustomPosition(...POSITION.level)
             .setScale(0)
             .setCustomAlign('Center')
             .setDepth(100);

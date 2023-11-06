@@ -1,14 +1,10 @@
 // import Utils from '@holywater-tech/ads-builder/framework/Utils';
-import { EVENTS, LAYERS_DEPTH, SHEETS } from './constants/Constants';
+import Utils from '@holywater-tech/ads-builder/framework/Utils';
+import { LAYERS_DEPTH, POSITION, SHEETS } from './constants/Constants';
 
 export default class Buttons extends Phaser.GameObjects.Container {
     constructor(scene, img, pos, onClick) {
         super(scene, 0, 0);
-        // this.addBase();
-        // this.addItem();
-        // this.addGlow();
-        // this.addShuffle();
-        // this.addDeselect();
         this.onClick = onClick;
         this.img = img;
         this.addButton(pos);
@@ -23,7 +19,10 @@ export default class Buttons extends Phaser.GameObjects.Container {
     // }
 
     initAssets() {
-        this.addProperties(['pos']).setCustomPosition(0, 250, 0, 250).setCustomAlign('Center').setDepth(LAYERS_DEPTH.ITEM);
+        this.addProperties(['pos'])
+            .setCustomPosition(...POSITION.buttons)
+            .setCustomAlign('Center')
+            .setDepth(LAYERS_DEPTH.ITEM);
     }
 
     addButton(pos) {
@@ -72,6 +71,7 @@ export default class Buttons extends Phaser.GameObjects.Container {
     }
 
     onBtnClick() {
+        Utils.addAudio(this.scene, 'tap', 0.5, false);
         this.scene.tweens.add({
             targets: this,
             scale: 0.98,
@@ -87,6 +87,10 @@ export default class Buttons extends Phaser.GameObjects.Container {
             ease: 'Sine.in',
         });
         this.onClick();
+    }
+
+    removeInteractive() {
+        this.button.disableInteractive();
     }
 
     addBaseInteractive() {
