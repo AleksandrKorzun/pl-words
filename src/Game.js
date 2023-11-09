@@ -20,6 +20,8 @@ export default class Game extends ParentScene {
         this.counter = 0;
         this.choice = [];
         this.correct = 0;
+        this.isTutorial = true;
+        this.tutorialWords = ['LEIA', 'HAN', 'ANAKIN', 'LUKE'];
     }
 
     initListeners() {
@@ -47,8 +49,8 @@ export default class Game extends ParentScene {
         this.mainContainer.add([this.items]);
         this.sort();
         this.items.show(showOptions);
-        setTimeout(() => this.items.showHand(), 2000);
-        setTimeout(() => this.onSubmitClick(), 8000);
+        setTimeout(() => this.items.showHand(this.tutorialWords[0]), 1000);
+        // setTimeout(() => this.onSubmitClick(), 8000);
     }
 
     addAnswerTitle() {
@@ -205,7 +207,7 @@ export default class Game extends ParentScene {
     }
 
     onShuffleClick() {
-        const arrPos = [...POSITION4x4.slice(0, -4 * this.correct)];
+        const arrPos = this.correct ? [...POSITION4x4.slice(0, -4 * this.correct)] : [...POSITION4x4];
 
         this.shuffleArray(arrPos);
         this.items.items
@@ -219,6 +221,9 @@ export default class Game extends ParentScene {
             element.isGlow = false;
         });
         this.choice = [];
+        if (this.isTutorial) {
+            this.tutorialWords = ['LEIA', 'HAN', 'ANAKIN', 'LUKE'];
+        }
         this.counter = 0;
     }
 

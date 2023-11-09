@@ -18,6 +18,7 @@ export default class Items extends Phaser.GameObjects.Container {
         this.gap = this.isPortrait ? 170 : 180;
 
         this.counter = 0;
+        this.tutorialWords = ['leia', 'han', 'luke', 'anakin'];
         this.initAssets();
         this.buildItems();
         if (!this.isOnce) {
@@ -111,47 +112,6 @@ export default class Items extends Phaser.GameObjects.Container {
             }
         });
     }
-    // addDisableButton() {
-    //     const x = this.isPortrait ? -210 : 280;
-    //     const y = this.isPortrait ? 180 : 180;
-
-    //     this.buttonOk = this.scene.add
-    //         .image(0, 0, 'atlas', SHEETS.BUTTON_DISABLE)
-    //         .setScale(0)
-    //         .setPosition(x, y)
-    //         .setDepth(LAYERS_DEPTH.BUTTON);
-    //     this.add([this.buttonOk]);
-    //     this._sort();
-    //     this.buttonOkGlow = this.scene.add
-    //         .image(0, 0, 'atlas', SHEETS.BUTTON_ENABLE_GLOW)
-    //         .setScale(1.1)
-    //         .setAlpha(0)
-    //         .setPosition(x, y)
-    //         .setDepth(LAYERS_DEPTH.BUTTON - 1);
-    //     this.add([this.buttonOk, this.buttonOkGlow]);
-    //     this._sort();
-    //     this.tweens.add({
-    //         targets: this.buttonOk,
-    //         scale: 1.1,
-    //         duration: 500,
-    //         delay: 1000,
-    //         ease: 'Sine.out',
-    //     });
-    // }
-
-    // addEnableButton() {
-    //     this.buttonOk.setTexture('atlas', SHEETS.BUTTON_ENABLE);
-    //     this.tweens.add({
-    //         targets: this.buttonOkGlow,
-    //         alpha: 1,
-    //         duration: 500,
-    //         delay: 500,
-    //         yoyo: true,
-    //         repeat: -1,
-    //         ease: 'Sine.out',
-    //     });
-    //     this.buttonOk.setInteractive().once('pointerdown', this.onClick, this);
-    // }
 
     removeButtonOk() {
         this.tweens.add({
@@ -258,28 +218,29 @@ export default class Items extends Phaser.GameObjects.Container {
         this._sort();
     }
 
-    showHand() {
+    showHand(item, delay) {
         this.tweens.add({
             targets: this.hand,
             alpha: 1,
             scale: 1,
             duration: 300,
-            delay: 300,
-            onStart: () => (this.isDrag ? this.addHandTutorialDrag() : this.addHandTutorial()),
+            delay: delay || 300,
+            onStart: () => this.addHandTutorial(item),
         });
     }
 
-    addHandTutorial() {
-        if (this.items.length === 0) {
+    addHandTutorial(current) {
+        if (this.items.length === 0 && current) {
             return;
         }
 
-        this.handX = this.items[0].x;
-        this.hand.setAlpha(1).setPosition(this.handX + 20, 200);
+        this.handX = 0;
+        this.hand.setAlpha(1).setPosition(this.handX + 20, 400);
         const tweensParam = [];
         this.items
-            .filter(({ img }) => ['LEIA', 'HAN', 'LUKE', 'ANAKIN'].includes(img.toUpperCase()))
+            .filter(({ img }) => current === img.toUpperCase())
             .forEach((item) => {
+                this.tweensHand && this.tweens.remove(this.tweensHand);
                 const press = {
                     scale: 0.9,
                     yoyo: true,
@@ -292,38 +253,30 @@ export default class Items extends Phaser.GameObjects.Container {
                     duration: 300,
                     x: item.x + 75,
                     y: item.y + 90,
-                    onComplete: () => item.onBaseSelect(),
+                    // onComplete: () => item.onBaseSelect(),
                 };
 
                 tweensParam.push(param, press);
             });
 
         this.tweensHand = this.tweens.timeline({
+            loop: -1,
             targets: this.hand,
             tweens: [...tweensParam],
-            onComplete: () => this.removeHandTutorial(),
+            // onComplete: () => this.removeHandTutorial(),
         });
     }
 
     removeHandTutorial() {
-        this.hand.setAlpha(0);
-        this.tweens.remove(this.tweensHand);
-        return this;
+        this.hand?.setAlpha(0);
+        this.hand.setPosition(20, 200);
+        this.tweensHand && this.tweens.remove(this.tweensHand);
+        this.tweensHand = null;
+        // return this;
     }
 
     onItemClick() {
-        // this.counter += 1;
-        // if (this.counter === 1 && !this.isOnce) {
-        //     this.addEnableButton();
-        // }
-        // if (this.isOnce) {
-        //     // this.removeHandTutorial();
-        //     // this.remove();
-        //     // this.items.forEach((obj) => {
-        //     //     // obj.disable();
-        //     //     obj.removeInteractive();
-        //     // });
-        // }
+        this.removeHandTutorial();
     }
 
     onClick() {

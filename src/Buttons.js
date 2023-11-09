@@ -8,8 +8,10 @@ export default class Buttons extends Phaser.GameObjects.Container {
         this.onClick = onClick;
         this.img = img;
         this.addButton(pos);
-        setTimeout(() => this.addBaseInteractive(), 11000);
+        this.addBaseInteractive();
+        // setTimeout(() => this.addBaseInteractive(), 11000);
         this.initAssets();
+        this.addHand();
         // this.initListener();
         // this.addText();
     }
@@ -34,6 +36,76 @@ export default class Buttons extends Phaser.GameObjects.Container {
             .setAlpha(0);
         this.add([this.button, this.glow]);
         this._sort();
+    }
+
+    addHand() {
+        this.handX = -100;
+        this.handY = 400;
+        this.hand = this.scene.add
+            .image(0, 0, 'atlas', SHEETS.HAND_TUTORIAL)
+            .setDepth(LAYERS_DEPTH.HAND_TUTORIAL)
+            .setPosition(this.handX, this.handY)
+            .setAlpha(0)
+            .setScale(0);
+        this.add([this.hand]);
+        this._sort();
+    }
+
+    showHand(item, delay) {
+        if (this.tweensHand) return;
+        this.scene.tweens.add({
+            targets: this.hand,
+            alpha: 1,
+            scale: 1,
+            duration: 300,
+            delay: delay || 300,
+            onStart: () => this.addHandTutorial(item),
+        });
+    }
+
+    addHandTutorial() {
+        // if (this.items.length === 0 && current) {
+        //     return;
+        // }
+
+        this.handX = 0;
+        this.hand.setAlpha(1).setPosition(this.handX + 20, 200);
+        const tweensParam = [];
+
+        const press = {
+            scale: 0.9,
+            yoyo: true,
+            duration: 300,
+            startDelay: 300,
+            targets: this.hand,
+        };
+        const param = {
+            delay: 300,
+            duration: 300,
+            x: this.button.x + 75,
+            y: this.button.y + 90,
+            // onComplete: () => item.onBaseSelect(),
+        };
+
+        tweensParam.push(param, press);
+
+        this.tweensHand = this.scene.tweens.timeline({
+            loop: -1,
+            targets: this.hand,
+            tweens: [...tweensParam],
+            onComplete: () => this.removeHandTutorial(),
+        });
+    }
+
+    removeHandTutorial() {
+        this.hand?.setAlpha(0);
+        // this.scene.tweens.remove(this.tweensHand);
+        this.tweensHand = null;
+        return this;
+    }
+
+    onItemClick() {
+        this.removeHandTutorial();
     }
 
     addDeselect() {
@@ -86,6 +158,7 @@ export default class Buttons extends Phaser.GameObjects.Container {
             yoyo: true,
             ease: 'Sine.in',
         });
+        this.removeHandTutorial();
         this.onClick();
     }
 

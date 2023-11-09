@@ -13,7 +13,8 @@ export default class Item extends Phaser.GameObjects.Container {
         this.isOpenStore = isOpenStore || false;
         this.scaleImg = scale;
         this.addBase();
-        setTimeout(() => this.addBaseInteractive(), 11000);
+        this.addBaseInteractive();
+        // setTimeout(() => this.addBaseInteractive(), 11000);
         this.addGlow();
         this.initListener();
         this.isGlow = false;
@@ -73,9 +74,17 @@ export default class Item extends Phaser.GameObjects.Container {
             });
             this.scene.choice.push(this);
 
+            const newTutorialWords = this.scene.tutorialWords.filter((word) => this.img.toUpperCase() !== word);
+
+            this.scene.tutorialWords = [...newTutorialWords];
             this.isGlow = true;
+            if (this.scene.tutorialWords[0]) {
+                this.scene.items.showHand(this.scene.tutorialWords[0], 1000);
+            }
+
             return this;
         }
+
         if (this.isGlow && this.scene.counter > 0) {
             this.scene.counter -= 1;
             this.tweens.add({
@@ -89,12 +98,14 @@ export default class Item extends Phaser.GameObjects.Container {
             this.scene.choice = choice;
             this.isGlow = false;
         }
+        if (this.scene.tutorialWords[0]) {
+            this.scene.items.showHand(this.scene.tutorialWords[0], 1000);
+        }
 
         return this;
     }
 
     onClick() {
-        // const tapAudio = this.tap ? this.tap : AUDIO.TAP;
         Utils.addAudio(this.scene, 'tap', 0.5, false);
         if (this.isOpenStore) {
             this.scene.emitter.emit(EVENTS.OPEN_STORE, this);
@@ -105,9 +116,9 @@ export default class Item extends Phaser.GameObjects.Container {
     }
 
     onItemsClick() {
-        // if (obj === this) {
-        //     return;
-        // }
-        // this.isSelected = false;
+        if (this.scene.counter === 3 && this.scene.isTutorial && this.scene.tutorialWords.length === 1) {
+            this.scene.btn_submit.showHand();
+            this.scene.isTutorial = false;
+        }
     }
 }
