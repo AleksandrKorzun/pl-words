@@ -106,7 +106,7 @@ export default class Item extends Phaser.GameObjects.Container {
     }
 
     onClick() {
-        Utils.addAudio(this.scene, 'tap', 0.5, false);
+        // Utils.addAudio(this.scene, 'tap', 0.5, false);
         if (this.isOpenStore) {
             this.scene.emitter.emit(EVENTS.OPEN_STORE, this);
         } else {

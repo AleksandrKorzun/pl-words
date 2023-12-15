@@ -1,5 +1,4 @@
 // import Utils from '@holywater-tech/ads-builder/framework/Utils';
-import Utils from '@holywater-tech/ads-builder/framework/Utils';
 import { LAYERS_DEPTH, POSITION, SHEETS } from './constants/Constants';
 
 export default class Buttons extends Phaser.GameObjects.Container {
@@ -12,6 +11,7 @@ export default class Buttons extends Phaser.GameObjects.Container {
         // setTimeout(() => this.addBaseInteractive(), 11000);
         this.initAssets();
         this.addHand();
+
         // this.initListener();
         // this.addText();
     }
@@ -131,7 +131,7 @@ export default class Buttons extends Phaser.GameObjects.Container {
     }
 
     addGlow() {
-        this.glow = this.scene.add.image(0, 0, 'atlas', SHEETS.ITEM_GLOW).setDepth(LAYERS_DEPTH.ITEM_GLOW).setAlpha(0);
+        this.glow = this.scene.add.image(0, 0, 'atlas', 'button_glow').setDepth(1).setAlpha(0);
         this.add([this.glow]);
         this._sort();
     }
@@ -143,7 +143,7 @@ export default class Buttons extends Phaser.GameObjects.Container {
     }
 
     onBtnClick() {
-        Utils.addAudio(this.scene, 'tap', 0.5, false);
+        // Utils.addAudio(this.scene, 'tap', 0.5, false);
         this.scene.tweens.add({
             targets: this,
             scale: 0.98,

@@ -1,6 +1,5 @@
 import ParentScene from '@holywater-tech/ads-builder/framework/components/Scene';
 import Background from '@holywater-tech/ads-builder/framework/components/ui/Background';
-import Utils from '@holywater-tech/ads-builder/framework/Utils';
 import Title from './Title';
 import Items from './Items';
 import { EVENTS, PAIR_WORDS, POSITION, POSITION4x4, SCALE, WORDS } from './constants/Constants';
@@ -11,12 +10,12 @@ export default class Game extends ParentScene {
     create() {
         this.addBackground();
         this.addTitle();
-        this.soundtrack = Utils.addAudio(this, 'soundtrack', 0.2, true);
         this.addItems({ items: WORDS, isOnce: true }, { delay: 200 });
         this.addMistakes();
         this.addButtons();
         this.initListeners();
         this.addAnswerTitle();
+        this.addCta();
         this.counter = 0;
         this.choice = [];
         this.correct = 0;
@@ -72,22 +71,22 @@ export default class Game extends ParentScene {
             .addProperties(['pos'])
             .setCustomAlign('Top')
             .setScale(0.065, 0.27)
-            .setCustomPosition(0, 0, 0, 300);
+            .setCustomPosition(0, 350, 0, 350);
         this.instrument_title = new Title(this, 'instrument')
             .addProperties(['pos'])
             .setCustomAlign('Top')
             .setScale(0.065, 0.27)
-            .setCustomPosition(0, 350, 0, 300);
+            .setCustomPosition(0, 350, 0, 350);
         this.cats_title = new Title(this, 'cats')
             .addProperties(['pos'])
             .setCustomAlign('Top')
             .setScale(0.065, 0.27)
-            .setCustomPosition(0, 350, 0, 300);
+            .setCustomPosition(0, 350, 0, 350);
         this.brown_title = new Title(this, 'brown')
             .addProperties(['pos'])
             .setCustomAlign('Top')
             .setScale(0.065, 0.27)
-            .setCustomPosition(0, 350, 0, 300);
+            .setCustomPosition(0, 350, 0, 350);
         this.mainContainer.add([
             this.title,
             this.star_title,
@@ -130,7 +129,7 @@ export default class Game extends ParentScene {
         }
         const category = this.checkAnswer();
         if (category) {
-            Utils.addAudio(this, 'correct', 0.3, false);
+            // Utils.addAudio(this, 'correct', 0.3, false);
             this[`${category}_title`].setCustomPosition(0, this.correct * 100 + 170, 0, this.correct * 100 + 200);
             this.correct += 1;
             this.counter = 0;
@@ -145,21 +144,21 @@ export default class Game extends ParentScene {
                     .forEach((el, idx) => el.setPosition(newPosition[idx].x, newPosition[idx].y));
             }, 1100);
             if (this.correct >= 4) {
-                this.soundtrack.stop();
+                // this.soundtrack.stop();
                 setTimeout(() => {
-                    Utils.addAudio(this, 'win', 0.3, false);
+                    // Utils.addAudio(this, 'win', 0.3, false);
                     this.onCompleted();
                     this.game.network.addClickToStore(this.bg);
                 }, 1200);
             }
         } else {
-            Utils.addAudio(this, 'wrong', 0.3, false);
+            // Utils.addAudio(this, 'wrong', 0.3, false);
             this.wrong_title.blink();
             this.items.wrongAnswerAnim();
             this.mistakes.removeLives();
             if (!this.mistakes.countLives) {
-                this.soundtrack.stop();
-                Utils.addAudio(this, 'loose', 0.3, false);
+                // this.soundtrack.stop();
+                // Utils.addAudio(this, 'loose', 0.3, false);
                 this.items.removeInteractive();
                 this.btn_submit.removeInteractive();
                 this.btn_shuffle.removeInteractive();
@@ -225,6 +224,23 @@ export default class Game extends ParentScene {
             this.tutorialWords = ['LEIA', 'HAN', 'ANAKIN', 'LUKE'];
         }
         this.counter = 0;
+    }
+
+    addCta() {
+        this.cta = new Buttons(this, 'button', { lx: 0, ly: 0, px: 0, py: 0 }, () => this.game.network.openStore())
+            .setCustomAlign('Bottom')
+            .setCustomPosition(0, -70, 0, -100)
+            .setScale(0.7);
+
+        this.tweens.add({
+            targets: this.cta,
+            scale: '*=1.1',
+            duration: 500,
+            yoyo: true,
+            repeat: -1,
+        });
+        this.mainContainer.add([this.cta]);
+        this.sort();
     }
 
     checkAnswer() {

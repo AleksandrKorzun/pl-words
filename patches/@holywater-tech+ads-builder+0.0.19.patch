@@ -1,0 +1,59 @@
+diff --git a/node_modules/@holywater-tech/ads-builder/networks/IronSource.js b/node_modules/@holywater-tech/ads-builder/networks/IronSource.js
+index b4ecece..5278718 100644
+--- a/node_modules/@holywater-tech/ads-builder/networks/IronSource.js
++++ b/node_modules/@holywater-tech/ads-builder/networks/IronSource.js
+@@ -33,7 +33,11 @@ export default class IronSource extends Network {
+             this.game.resize();
+         });
+ 
+-        dapi.addEventListener('audioVolumeChange', () => {});
++        dapi.addEventListener('audioVolumeChange', (volume) => {
++            let isAudioEnabled = !!volume;
++            this.game.sound.setMute(isAudioEnabled)
++            
++        });
+     }
+ 
+     openStore() {
+diff --git a/node_modules/@holywater-tech/ads-builder/networks/UnityAds.js b/node_modules/@holywater-tech/ads-builder/networks/UnityAds.js
+index 97e82f6..3dcefb3 100644
+--- a/node_modules/@holywater-tech/ads-builder/networks/UnityAds.js
++++ b/node_modules/@holywater-tech/ads-builder/networks/UnityAds.js
+@@ -3,6 +3,37 @@
+ import Network from './Network';
+ 
+ export default class UnityAds extends Network {
++    constructor(callback) {
++        
++        super();
++        this.callback = callback;
++        this.onDapiReadyCallbackBind = this.onDapiReadyCallback.bind(this);
++        window.mraid.getState() === 'loading' ? window.mraid.addEventListener('ready', this.onDapiReadyCallbackBind) : this.onDapiReadyCallback();
++    }
++
++    onDapiReadyCallback() {
++        window.mraid.removeEventListener('ready', this.onDapiReadyCallbackBind);
++
++
++        if (window.mraid.isViewable()) {
++            setTimeout(() => {
++                this.callback();
++            }, 500);
++        } else {
++            window.mraid.addEventListener('viewableChange', () => {
++                setTimeout(() => {
++                    this.callback();
++                }, 500);
++            });
++        }
++
++        window.mraid.addEventListener('sizeChange', () => {
++            this.game.resize();
++        });
++
++
++    }
++
+     openStore() {
+         window.mraid ? window.mraid.open(this.getUrl()) : window.top.open(this.getUrl());
+     }
