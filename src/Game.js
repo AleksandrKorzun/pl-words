@@ -229,8 +229,8 @@ export default class Game extends ParentScene {
     addCta() {
         this.cta = new Buttons(this, 'button', { lx: 0, ly: 0, px: 0, py: 0 }, () => this.game.network.openStore())
             .setCustomAlign('Bottom')
-            .setCustomPosition(0, -70, 0, -100)
-            .setScale(0.7);
+            .setCustomPosition(0, -50, 0, -50)
+            .setScale(0.6);
 
         this.tweens.add({
             targets: this.cta,

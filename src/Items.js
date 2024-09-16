@@ -95,7 +95,7 @@ export default class Items extends Phaser.GameObjects.Container {
             if (item.isGlow) {
                 this.tweens.add({
                     targets: item,
-                    y: -330 + (this.scene.correct - 1) * 130,
+                    y: this.isPortrait ? -300 + (this.scene.correct - 1) * 130 : -270 + (this.scene.correct - 1) * 130,
                     x: 0,
                     duration: 1000,
                     ease: 'Sine.in',
@@ -103,8 +103,8 @@ export default class Items extends Phaser.GameObjects.Container {
                 this.tweens.add({
                     targets: item,
                     alpha: 0,
-                    delay: 900,
-                    duration: 200,
+                    delay: 700,
+                    duration: 300,
                     ease: 'Sine.in',
                 });
 

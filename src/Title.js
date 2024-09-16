@@ -5,15 +5,13 @@ export default class Title extends Phaser.GameObjects.Container {
         super(scene, 0, 0);
         this.tweens = scene.tweens;
         this.addProperties(['pos', 'scale'])
-            .setCustomPosition(0, 80, 0, 100)
+            .setCustomPosition(0, 50, 0, 60)
             .setCustomScale(0.3, 0.3, 0.3, 0.3)
             .setCustomAlign('Top')
             .setDepth(25)
             .setAlpha(0);
         this.isPortrait = this.scene.game.size.isPortrait;
         this.addTitle(title);
-        // this.addText();
-        // this.move();
     }
 
     addTitle(title) {
@@ -21,18 +19,6 @@ export default class Title extends Phaser.GameObjects.Container {
         this.add([this.title]);
         this._sort();
     }
-
-    // addText() {
-    //     this.textTitle = this.scene.add
-    //         .text(0, 0, 'Create four groups of four!', {
-    //             fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
-    //             color: 'grey',
-    //         })
-    //         .setPosition(30, 5);
-
-    //     this.add([this.textTitle]);
-    //     this._sort();
-    // }
 
     show() {
         this.tweens.add({

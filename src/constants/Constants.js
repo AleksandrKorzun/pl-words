@@ -25,10 +25,10 @@ export const LAYERS_DEPTH = {
 };
 
 export const POSITION = {
-    choices: Screen.phoneProportions ? [0, 380, 0, 480] : [0, 430, 0, 480],
-    mistakes: Screen.phoneProportions ? [0, 180, 0, 230] : [0, 180, 0, 280],
-    buttons: Screen.phoneProportions ? [0, 250, 0, 300] : [0, 250, 0, 350],
-    messageTitle: Screen.phoneProportions ? [0, -100, 0, -100] : [0, -100, 0, -30],
+    choices: Screen.phoneProportions ? [0, 350, 0, 430] : [0, 350, 0, 400],
+    mistakes: Screen.phoneProportions ? [0, 130, 0, 180] : [0, 130, 0, 180],
+    buttons: Screen.phoneProportions ? [0, 200, 0, 250] : [0, 200, 0, 250],
+    messageTitle: Screen.phoneProportions ? [0, -150, 0, -150] : [0, -150, 0, -120],
     level: Screen.phoneProportions ? [0, 0, 0, 0] : [0, 0, 0, 0],
 };
 export const SCALE = {
@@ -36,7 +36,6 @@ export const SCALE = {
     mistakes: Screen.phoneProportions ? [0, 180, 0, 230] : [0, 180, 0, 280],
     buttons: Screen.phoneProportions ? [0, 250, 0, 300] : [0, 250, 0, 350],
     title: Screen.phoneProportions ? [0.22, 0.22, 0.22, 0.22] : [0.22, 0.22, 0.22, 0.22],
-    messageTitle: Screen.phoneProportions ? [0, 350, 0, -100] : [0, 350, 0, -30],
     level: Screen.phoneProportions ? [0, 0, 0, 0] : [0, 0, 0, 0],
 };
 
